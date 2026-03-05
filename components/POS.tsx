@@ -336,7 +336,7 @@ export default function POS() {
   return (
     <div className="container mx-auto px-4 pt-24 pb-20 min-h-screen">
       {/* Header Section with Glass Card */}
-      <div className="bg-black/30 backdrop-blur-sm rounded-2xl border border-white/10 shadow-lg p-8 mb-8 relative overflow-hidden">
+      <div className="bg-black/30 backdrop-blur-md rounded-2xl border border-white/10 shadow-xl p-6 mb-8 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-3xl rounded-full -mr-16 -mt-16"></div>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
           <div>
@@ -352,12 +352,19 @@ export default function POS() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           {/* Products Section - Glass Card */}
-          <div className="bg-black/40 backdrop-blur-sm rounded-xl border border-white/10 text-white p-6 shadow-lg">
+          <div className="bg-black/40 backdrop-blur-md rounded-2xl border border-white/10 shadow-xl p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-bold font-tajawal text-white">المنتجات</h3>
               <div className="flex gap-2">
                 <div className="relative">
                   <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-200/50 w-5 h-5" />
+                <input
+                  type="text"
+                  placeholder="البحث..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="bg-black/30 backdrop-blur-sm rounded-xl pr-10 pl-4 py-2 font-tajawal text-slate-100 placeholder-slate-200/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 border border-white/20"
+                />
                   <input
                     type="text"
                     placeholder="البحث..."

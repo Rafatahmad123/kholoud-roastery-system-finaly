@@ -112,7 +112,7 @@ export default function ExpensesPage() {
       .reduce((total, expense) => total + expense.amount, 0)
   }
 
-  const filteredExpenses = expenses.filter(expense => {
+  const filteredExpenses = (expenses || []).filter(expense => {
     const matchesSearch = expense.description.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesCategory = categoryFilter === 'all' || expense.category === categoryFilter
     return matchesSearch && matchesCategory
@@ -132,7 +132,7 @@ export default function ExpensesPage() {
   return (
     <div className="container mx-auto px-4 pt-24 pb-20 min-h-screen">
       {/* Header Section with Glass Card */}
-      <div className="bg-black/30 backdrop-blur-sm rounded-2xl border border-white/10 shadow-lg p-8 mb-8 relative overflow-hidden">
+      <div className="bg-black/30 backdrop-blur-md rounded-2xl border border-white/10 shadow-xl p-6 mb-8 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-3xl rounded-full -mr-16 -mt-16"></div>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
           <div>
@@ -147,11 +147,11 @@ export default function ExpensesPage() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-black/40 backdrop-blur-sm rounded-xl border border-white/10 text-white p-6 shadow-lg transition-all duration-300 hover:scale-[1.02]">
+        <div className="bg-black/40 backdrop-blur-md rounded-2xl border border-white/10 shadow-xl p-6">
           <div className="flex items-center gap-3">
             <Receipt className="w-8 h-8 text-emerald-300" />
             <div>
-              <h3 className="text-sm font-tajawal text-slate-200/60">إجمالي المصاريف</h3>
+              <h3 className="text-sm font-tajawal text-white/60">إجمالي المصاريف</h3>
               <p className="text-2xl font-bold font-tajawal text-amber-200">
                 {formatCurrencyLS(getTotalExpenses())}
               </p>
@@ -162,12 +162,12 @@ export default function ExpensesPage() {
         {categories.slice(0, 3).map((category, index) => (
           <div
             key={category}
-            className="bg-black/40 backdrop-blur-sm rounded-xl border border-white/10 text-white p-6 shadow-lg transition-all duration-300 hover:scale-[1.02]"
+            className="bg-black/40 backdrop-blur-md rounded-2xl border border-white/10 shadow-xl p-6"
           >
             <div className="flex items-center gap-3">
               <TrendingDown className="w-8 h-8 text-emerald-300" />
               <div>
-                <h3 className="text-sm font-tajawal text-slate-200/60">{category}</h3>
+                <h3 className="text-sm font-tajawal text-white/60">{category}</h3>
                 <p className="text-xl font-bold font-tajawal text-amber-200">
                   {formatCurrencyLS(getTotalByCategory(category))}
                 </p>
@@ -178,7 +178,7 @@ export default function ExpensesPage() {
       </div>
 
       {/* Filters and Search Section - Glass Card */}
-      <div className="bg-black/40 backdrop-blur-sm rounded-xl border border-white/10 text-white p-6 shadow-lg mb-6 transition-all duration-300 hover:scale-[1.02]">
+      <div className="bg-black/40 backdrop-blur-md rounded-2xl border border-white/10 shadow-xl p-6 mb-6">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
@@ -188,7 +188,7 @@ export default function ExpensesPage() {
                 placeholder="البحث عن مصروف..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-black/30 backdrop-blur-sm rounded-xl font-tajawal text-slate-200 placeholder-slate-200/40 focus:outline-none focus:ring-2 focus:ring-emerald transition-all duration-300 border border-white/20"
+                className="w-full pl-10 pr-4 py-3 bg-black/30 backdrop-blur-md rounded-2xl font-tajawal text-slate-200 placeholder-slate-200/40 focus:outline-none focus:ring-2 focus:ring-emerald transition-all duration-300 border border-white/20"
               />
             </div>
           </div>
@@ -197,7 +197,7 @@ export default function ExpensesPage() {
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="bg-black/30 backdrop-blur-sm rounded-xl px-4 py-3 font-tajawal text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald transition-all duration-300 border border-white/20"
+              className="bg-black/30 backdrop-blur-md rounded-2xl px-4 py-3 font-tajawal text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald transition-all duration-300 border border-white/20"
             >
               <option value="all">جميع الفئات</option>
               {categories.map(category => (
@@ -208,7 +208,7 @@ export default function ExpensesPage() {
           
           <button
             onClick={() => setShowAddModal(true)}
-            className="px-6 py-3 bg-gradient-to-r from-emerald to-emerald-600 text-white rounded-2xl font-tajawal font-semibold hover:from-emerald/90 hover:to-emerald-600/90 transition-all duration-300 flex items-center gap-2 hover:scale-[1.02]"
+            className="px-6 py-3 bg-gradient-to-r from-emerald to-emerald-600 text-white rounded-2xl font-tajawal font-semibold hover:from-emerald/90 hover:to-emerald-600/90 transition-all duration-300 flex items-center gap-2"
           >
             <Plus className="w-5 h-5" />
             إضافة مصروف
@@ -217,7 +217,7 @@ export default function ExpensesPage() {
       </div>
 
       {/* Expenses Table Section - Glass Card */}
-      <div className="bg-black/40 backdrop-blur-sm rounded-xl border border-white/10 text-white p-6 shadow-lg transition-all duration-300 hover:scale-[1.02]">
+      <div className="bg-black/40 backdrop-blur-md rounded-2xl border border-white/10 shadow-xl p-6 overflow-x-auto">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
