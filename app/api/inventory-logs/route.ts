@@ -1,0 +1,239 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@supabase/supabase-js'
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
+
+export async function POST(request: NextRequest) {
+  try {
+    const { items, saleId } = await request.json()
+    
+    console.log('📊 Inventory Audit: Creating audit records for items:', items)
+    console.log('📊 Inventory Audit: Sale ID:', saleId)
+    console.log('🔍 DEBUG: Raw items received:', JSON.stringify(items, null, 2))
+    
+    if (!items || !Array.isArray(items)) {
+      console.log('❌ DEBUG: Invalid items data - not an array')
+      return NextResponse.json({ error: 'Invalid items data' }, { status: 400 })
+    }
+
+    // Create inventory audit records for each sold item
+    const logRecords = items.map((item: any) => {
+      console.log('🔍 DEBUG: Processing item:', JSON.stringify(item, null, 2))
+      console.log('🔍 DEBUG: item.product_id:', item.product_id, 'Type:', typeof item.product_id)
+      
+      return {
+        product_id: item.product_id, // ✅ Safe Integration: Use existing INTEGER product_id
+        product_name: item.product_name,
+        quantity_sold: item.quantity_sold || item.quantity,
+        remaining_stock: item.remaining_stock,
+        sale_id: saleId,
+        created_at: new Date().toISOString()
+      }
+    })
+
+    console.log('📝 Inventory Audit: Records to insert:', logRecords)
+    console.log('🔍 DEBUG: Final logRecords:', JSON.stringify(logRecords, null, 2))
+
+    // ✅ Safe Integration: Try to create audit logs, don't fail if it errors
+    try {
+      const { data, error } = await supabase
+        .from('inventory_logs')
+        .insert(logRecords)
+        .select()
+
+      if (error) {
+        console.error('❌ Inventory Audit: Failed to create audit records:', error)
+        console.log('🔍 DEBUG: Insert error details:', JSON.stringify(error, null, 2))
+        // Don't fail the sale, just log the error
+        return NextResponse.json({ 
+          success: false, 
+          error: error.message,
+          logged: false
+        }, { status: 200 }) // Return 200 so sale doesn't fail
+      }
+
+      console.log('✅ Inventory Audit: Audit records created successfully:', data)
+      console.log('🔍 DEBUG: Inserted data:', JSON.stringify(data, null, 2))
+      return NextResponse.json({ 
+        success: true, 
+        data,
+        logged: true
+      })
+
+    } catch (dbError) {
+      console.error('❌ Inventory Audit: Database error during audit logging:', dbError)
+      console.log('🔍 DEBUG: Database error:', JSON.stringify(dbError, null, 2))
+      // Don't fail the sale, just log the error
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Database error',
+        logged: false
+      }, { status: 200 }) // Return 200 so sale doesn't fail
+    }
+
+  } catch (error) {
+    console.error('❌ Inventory Audit: API error:', error)
+    console.log('🔍 DEBUG: API error:', JSON.stringify(error, null, 2))
+    // Don't fail the sale, just log the error
+    return NextResponse.json({ 
+      success: false, 
+      error: 'API error',
+      logged: false
+    }, { status: 200 }) // Return 200 so sale doesn't fail
+  }
+}
+
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const date = searchParams.get('date')
+    const mode = searchParams.get('mode') || 'daily'
+    
+    console.log('📊 Inventory Audit: Fetching audit records for date:', date, 'Mode:', mode)
+    console.log('🔍 DEBUG: GET request params - date:', date, 'mode:', mode)
+
+    // First, let's check if the table exists and has data
+    try {
+      console.log('🔍 DEBUG: Checking table structure...')
+      const { data: tableInfo, error: tableError } = await supabase
+        .from('inventory_logs')
+        .select('count')
+        .limit(1)
+      
+      console.log('🔍 DEBUG: Table check result:', { tableInfo, tableError })
+      
+      if (tableError) {
+        console.log('🔍 DEBUG: Table error - trying raw query...')
+        // Try to get raw count without select
+        const { count, error: countError } = await supabase
+          .from('inventory_logs')
+          .select('*', { count: 'exact', head: true })
+        
+        console.log('🔍 DEBUG: Raw count result:', { count, countError })
+      }
+    } catch (checkError) {
+      console.log('🔍 DEBUG: Table check failed:', checkError)
+    }
+
+    let query = supabase
+      .from('inventory_logs')
+      .select(`
+        id,
+        product_id,
+        product_name,
+        quantity_sold,
+        remaining_stock,
+        sale_id,
+        created_at,
+        products (
+          stock_quantity,
+          wholesale_price,
+          price
+        )
+      `)
+      .order('created_at', { ascending: false })
+
+    console.log('🔍 DEBUG: Query built successfully')
+
+    // Filter by date if provided - ✅ Timezone Alignment: Asia/Damascus timezone
+    if (date) {
+      // Create date in Asia/Damascus timezone
+      const damascusDate = new Date(date + 'T00:00:00+03:00') // UTC+3 for Damascus
+      const startOfDay = new Date(damascusDate)
+      startOfDay.setHours(0, 0, 0, 0)
+      const endOfDay = new Date(damascusDate)
+      endOfDay.setHours(23, 59, 59, 999)
+      
+      console.log('🕐 Timezone Alignment: Damascus date range:', {
+        date,
+        startOfDay: startOfDay.toISOString(),
+        endOfDay: endOfDay.toISOString(),
+        timezone: 'Asia/Damascus (UTC+3)'
+      })
+      
+      query = query
+        .gte('created_at', startOfDay.toISOString())
+        .lte('created_at', endOfDay.toISOString())
+    }
+
+    console.log('🔍 DEBUG: Executing query...')
+    const { data, error } = await query
+
+    if (error) {
+      console.error('❌ Inventory Audit: Failed to fetch audit records:', error)
+      console.log('🔍 DEBUG: Query error details:', JSON.stringify(error, null, 2))
+      
+      // ✅ DATA FALLBACK: If products join still fails, return raw inventory_logs data
+      console.log('🔍 DEBUG: Trying fallback - raw inventory_logs data without products relationship...')
+      try {
+        let fallbackQuery = supabase
+          .from('inventory_logs')
+          .select(`
+            id,
+            product_id,
+            product_name,
+            quantity_sold,
+            remaining_stock,
+            sale_id,
+            created_at
+          `)
+          .order('created_at', { ascending: false })
+        
+        if (date) {
+          const damascusDate = new Date(date + 'T00:00:00+03:00')
+          const startOfDay = new Date(damascusDate)
+          startOfDay.setHours(0, 0, 0, 0)
+          const endOfDay = new Date(damascusDate)
+          endOfDay.setHours(23, 59, 59, 999)
+          
+          fallbackQuery = fallbackQuery
+            .gte('created_at', startOfDay.toISOString())
+            .lte('created_at', endOfDay.toISOString())
+        }
+        
+        const { data: fallbackData, error: fallbackError } = await fallbackQuery
+        
+        if (fallbackError) {
+          console.log('🔍 DEBUG: Even fallback query failed:', fallbackError)
+          return NextResponse.json({ 
+            error: 'Failed to fetch inventory audit data', 
+            details: fallbackError.message,
+            fallback: false
+          }, { status: 500 })
+        }
+        
+        console.log('✅ Inventory Audit: Fallback query successful:', fallbackData?.length || 0)
+        console.log('🔍 DEBUG: Fallback data (raw inventory_logs):', JSON.stringify(fallbackData, null, 2))
+        
+        // ✅ DATA FALLBACK: Return raw data with a flag
+        return NextResponse.json({ 
+          data: fallbackData, 
+          mode,
+          fallback: true,
+          message: 'Products relationship unavailable - showing raw inventory logs'
+        })
+        
+      } catch (fallbackCatchError) {
+        console.log('🔍 DEBUG: Fallback attempt failed:', fallbackCatchError)
+        return NextResponse.json({ 
+          error: 'Failed to fetch inventory audit', 
+          details: error.message,
+          fallback: false
+        }, { status: 500 })
+      }
+    }
+
+    console.log('✅ Inventory Audit: Audit records fetched successfully:', data?.length || 0)
+    console.log('🔍 Validation Log: SUPABASE_FETCH:', JSON.stringify(data, null, 2))
+    console.log('🔍 DEBUG: Final data length:', data?.length || 0)
+    return NextResponse.json({ data, mode })
+
+  } catch (error) {
+    console.error('❌ Inventory Audit: GET API error:', error)
+    console.log('🔍 DEBUG: GET API error:', JSON.stringify(error, null, 2))
+    return NextResponse.json({ error: 'Failed to fetch inventory audit' }, { status: 500 })
+  }
+}

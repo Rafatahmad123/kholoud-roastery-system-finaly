@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  font-family: 'Tajawal', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* خلفية المحمصة */
+.roastery-bg {
+  background-image: url('/roasterybg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* طبقة تعتيم خفيفة جداً فوق الخلفية */
+.roastery-overlay {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* زجاج بسيط و خفيف جداً */
+.glass {
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.75rem;
+}
+
+/* خطوط ذهبية خفيفة */
+.glass-gold-border {
+  border-image: linear-gradient(135deg, rgba(234, 179, 8, 0.7), rgba(16, 185, 129, 0.4)) 1;
+}
+
+/* سكروول ناعم */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.9);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
