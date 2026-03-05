@@ -228,23 +228,22 @@ export default function ExpensesPage() {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div className="bg-black/40 backdrop-blur-sm rounded-xl border border-white/10 text-white p-6 shadow-lg transition-all duration-300 hover:scale-[1.02]">
-            <div className="flex items-center gap-3">
-              <Receipt className="w-8 h-8 text-emerald-300" />
-              <div>
-                <h3 className="text-sm font-tajawal text-slate-200/60">إجمالي المصاريف</h3>
-                <p className="text-2xl font-bold font-tajawal text-amber-200">
-                  {formatCurrencyLS(getTotalExpenses())}
-                </p>
-              </div>
+          <div className="flex items-center gap-3">
+            <Receipt className="w-8 h-8 text-emerald-300" />
+            <div>
+              <h3 className="text-sm font-tajawal text-slate-200/60">إجمالي المصاريف</h3>
+              <p className="text-2xl font-bold font-tajawal text-amber-200">
+                {formatCurrencyLS(getTotalExpenses())}
+              </p>
             </div>
           </div>
+        </div>
 
-          {categories.slice(0, 3).map((category, index) => (
-            <div
-              key={category}
-              className="glass rounded-3xl p-6 transition-all duration-300 hover:scale-[1.02]"
-              style={{ transform: 'translateY(0)', opacity: 1 }}
-            >
+        {categories.slice(0, 3).map((category, index) => (
+          <div
+            key={category}
+            className="bg-black/40 backdrop-blur-sm rounded-xl border border-white/10 text-white p-6 shadow-lg transition-all duration-300 hover:scale-[1.02]"
+          >
               <div className="flex items-center gap-3">
                 <TrendingDown className="w-8 h-8 text-emerald-300" />
                 <div>
@@ -258,26 +257,23 @@ export default function ExpensesPage() {
           ))}
         </div>
 
-        {/* Filters and Search */}
-        <div
-          className="glass rounded-3xl p-6 mb-6 transition-all duration-300 hover:scale-[1.02]"
-          style={{ transform: 'translateY(0)', opacity: 1 }}
-        >
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute right-3 top-3 w-5 h-5 text-slate-200/40" />
-                <input
-                  type="text"
-                  placeholder="البحث عن مصروف..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 neumorphic rounded-xl font-tajawal text-slate-200 placeholder-slate-200/40 focus:outline-none focus:ring-2 focus:ring-emerald transition-all duration-300"
-                />
-              </div>
+        {/* Filters and Search Section - Glass Card */}
+      <div className="bg-black/40 backdrop-blur-sm rounded-xl border border-white/10 text-white p-6 shadow-lg mb-6 transition-all duration-300 hover:scale-[1.02]">
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex-1">
+            <div className="relative">
+              <Search className="absolute right-3 top-3 w-5 h-5 text-slate-200/40" />
+              <input
+                type="text"
+                placeholder="البحث عن مصروف..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 bg-black/30 backdrop-blur-sm rounded-xl font-tajawal text-slate-200 placeholder-slate-200/40 focus:outline-none focus:ring-2 focus:ring-emerald transition-all duration-300 border border-white/20"
+              />
             </div>
-            <div className="flex items-center gap-2">
-              <Filter className="w-5 h-5 text-slate-200/60" />
+          </div>
+          <div className="flex items-center gap-2">
+            <Filter className="w-5 h-5 text-slate-200/60" />
               <select
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
@@ -299,13 +295,11 @@ export default function ExpensesPage() {
             </button>
           </div>
         </div>
+      </div>
 
-        {/* Expenses Table */}
-        <div
-          className="glass rounded-3xl p-6 transition-all duration-300 hover:scale-[1.02]"
-          style={{ transform: 'translateY(0)', opacity: 1 }}
-        >
-          <div className="overflow-x-auto">
+      {/* Expenses Table Section - Glass Card */}
+      <div className="bg-black/40 backdrop-blur-sm rounded-xl border border-white/10 text-white p-6 shadow-lg transition-all duration-300 hover:scale-[1.02]">
+        <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-emerald/20">
@@ -388,24 +382,22 @@ export default function ExpensesPage() {
                 )}
               </tbody>
             </table>
-          </div>
         </div>
+      </div>
 
-        {/* Add Expense Modal */}
-        {showAddModal && (
+      {/* Add Expense Modal */}
+      {showAddModal && (
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+          onClick={() => setShowAddModal(false)}
+        >
           <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
-            style={{ opacity: 1 }}
-            onClick={() => setShowAddModal(false)}
+            className="bg-black/40 backdrop-blur-sm rounded-xl border border-white/10 text-white p-8 max-w-md w-full transition-all duration-300"
+            onClick={(e) => e.stopPropagation()}
           >
-            <div
-              className="glass rounded-3xl p-8 max-w-md w-full transition-all duration-300"
-              style={{ transform: 'scale(1)', opacity: 1 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <h2 className="text-2xl font-bold font-tajawal text-slate-200 mb-6">إضافة مصروف جديد</h2>
-              
-              <form onSubmit={handleSubmit} className="space-y-4">
+            <h2 className="text-2xl font-bold font-tajawal text-slate-200 mb-6">إضافة مصروف جديد</h2>
+            
+            <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label className="block text-sm font-tajawal text-slate-200 mb-2">الوصف</label>
                   <input
