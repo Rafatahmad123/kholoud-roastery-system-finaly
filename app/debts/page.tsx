@@ -283,79 +283,74 @@ export default function DebtsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-transparent p-6 relative z-10">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div>
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold font-tajawal text-white mb-2">الديون والذمم</h1>
-            <p className="text-lg font-tajawal text-slate-200">إدارة ديون العملاء والموردين</p>
+    <div className="container mx-auto px-4 pt-24 pb-20 min-h-screen">
+      {/* Header Section with Glass Card */}
+      <div className="bg-black/30 backdrop-blur-sm rounded-2xl border border-white/10 shadow-lg p-8 mb-8 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-3xl rounded-full -mr-16 -mt-16"></div>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
+          <div>
+            <h2 className="text-3xl font-bold font-tajawal text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] mb-2">
+              الديون والذمم
+              <div className="h-1 w-12 bg-emerald-500 mt-1 rounded-full"></div>
+            </h2>
+            <p className="text-white/80 font-tajawal drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">إدارة ديون العملاء والموردين</p>
           </div>
         </div>
+      </div>
 
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div>
-            <div className="glass rounded-3xl p-6">
-              <div className="flex items-center gap-3">
-                <User className="w-8 h-8 text-emerald-300" />
-                <div>
-                  <h3 className="text-sm font-tajawal text-white/60">ديون العملاء</h3>
-                  <p className="text-2xl font-bold font-tajawal text-amber-200">
-                    {formatCurrencyLS(getTotalByType('customer'))}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <div className="glass rounded-3xl p-6">
-              <div className="flex items-center gap-3">
-                <DollarSign className="w-8 h-8 text-emerald-300" />
-                <div>
-                  <h3 className="text-sm font-tajawal text-white/60">ديون الموردين</h3>
-                  <p className="text-2xl font-bold font-tajawal text-amber-200">
-                    {formatCurrencyLS(getTotalByType('supplier'))}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <div className="glass rounded-3xl p-6">
-              <div className="flex items-center gap-3">
-                <Filter className="w-8 h-8 text-emerald-300" />
-                <div>
-                  <h3 className="text-sm font-tajawal text-white/60">إجمالي الديون</h3>
-                  <p className="text-2xl font-bold font-tajawal text-amber-200">
-                    {formatCurrencyLS(getTotalByType('customer') + getTotalByType('supplier'))}
-                  </p>
-                </div>
-              </div>
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-black/40 backdrop-blur-sm rounded-xl border border-white/10 text-white p-6 shadow-lg">
+          <div className="flex items-center gap-3">
+            <User className="w-8 h-8 text-emerald-300" />
+            <div>
+              <h3 className="text-sm font-tajawal text-white/60">ديون العملاء</h3>
+              <p className="text-2xl font-bold font-tajawal text-amber-200">
+                {formatCurrencyLS(getTotalByType('customer'))}
+              </p>
             </div>
           </div>
         </div>
-
-        {/* Filters and Search */}
-        <div>
-          <div className="glass rounded-3xl p-6 mb-6">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1">
-                <div className="relative">
-                  <Search className="absolute right-3 top-3 w-5 h-5 text-white/40" />
-                  <input
-                    type="text"
-                    placeholder="البحث عن دين..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pr-10 pl-4 py-3 rounded-2xl border border-gold/20 bg-white/50 backdrop-blur-sm font-tajawal text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-gold/50"
-                  />
-                </div>
-              </div>
+        <div className="bg-black/40 backdrop-blur-sm rounded-xl border border-white/10 text-white p-6 shadow-lg">
+          <div className="flex items-center gap-3">
+            <DollarSign className="w-8 h-8 text-emerald-300" />
+            <div>
+              <h3 className="text-sm font-tajawal text-white/60">ديون الموردين</h3>
+              <p className="text-2xl font-bold font-tajawal text-amber-200">
+                {formatCurrencyLS(getTotalByType('supplier'))}
+              </p>
             </div>
-            
+          </div>
+        </div>
+        <div className="bg-black/40 backdrop-blur-sm rounded-xl border border-white/10 text-white p-6 shadow-lg">
+          <div className="flex items-center gap-3">
+            <Filter className="w-8 h-8 text-emerald-300" />
+            <div>
+              <h3 className="text-sm font-tajawal text-white/60">إجمالي الديون</h3>
+              <p className="text-2xl font-bold font-tajawal text-amber-200">
+                {formatCurrencyLS(getTotalByType('customer') + getTotalByType('supplier'))}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+        {/* Filters and Search Section - Glass Card */}
+      <div className="bg-black/40 backdrop-blur-sm rounded-xl border border-white/10 text-white p-6 shadow-lg mb-6">
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex-1">
+            <div className="relative">
+              <Search className="absolute right-3 top-3 w-5 h-5 text-white/40" />
+              <input
+                type="text"
+                placeholder="البحث عن دين..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pr-10 pl-4 py-3 rounded-2xl border border-gold/20 bg-white/50 backdrop-blur-sm font-tajawal text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-gold/50"
+              />
+            </div>
+          </div>
+          <div className="flex gap-2">
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}

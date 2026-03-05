@@ -334,28 +334,25 @@ export default function POS() {
   }
 
   return (
-    <div
-      className="container mx-auto px-4 pt-24 pb-20 min-h-screen"
-      style={{ opacity: 1 }}
-    >
-      <div
-        className="mb-6"
-        style={{ transform: 'translateY(0)', opacity: 1 }}
-      >
-        <h2 className="text-3xl md:text-4xl font-bold font-tajawal text-white mb-2">
-          نقطة البيع
-        </h2>
-        <p className="text-lg font-tajawal text-slate-200">
-          نظام المبيعات والمسح الضوئي
-        </p>
+    <div className="container mx-auto px-4 pt-24 pb-20 min-h-screen">
+      {/* Header Section with Glass Card */}
+      <div className="bg-black/30 backdrop-blur-sm rounded-2xl border border-white/10 shadow-lg p-8 mb-8 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-3xl rounded-full -mr-16 -mt-16"></div>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
+          <div>
+            <h2 className="text-3xl font-bold font-tajawal text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] mb-2">
+              نقطة البيع
+              <div className="h-1 w-12 bg-emerald-500 mt-1 rounded-full"></div>
+            </h2>
+            <p className="text-white/80 font-tajawal drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">نظام المبيعات والمسح الضوئي</p>
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div
-          className="lg:col-span-2 space-y-6"
-          style={{ transform: 'translateX(0)', opacity: 1 }}
-        >
-          <div className="bg-black/30 backdrop-blur-sm rounded-2xl border border-white/10 shadow-lg p-6">
+        <div className="lg:col-span-2 space-y-6">
+          {/* Products Section - Glass Card */}
+          <div className="bg-black/40 backdrop-blur-sm rounded-xl border border-white/10 text-white p-6 shadow-lg">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-bold font-tajawal text-white">المنتجات</h3>
               <div className="flex gap-2">

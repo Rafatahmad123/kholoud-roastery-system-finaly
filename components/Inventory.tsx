@@ -101,14 +101,22 @@ export default function Inventory() {
 
   return (
     <div className="container mx-auto px-4 pt-24 pb-20">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold font-tajawal text-white mb-2">إدارة المنتجات</h1>
-        <p className="text-lg font-tajawal text-slate-200">
-          إدارة وتتبع جميع منتجات القهوة والمخزون
-        </p>
+      {/* Header Section with Glass Card */}
+      <div className="bg-black/30 backdrop-blur-sm rounded-2xl border border-white/10 shadow-lg p-8 mb-8 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-3xl rounded-full -mr-16 -mt-16"></div>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
+          <div>
+            <h2 className="text-3xl font-bold font-tajawal text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] mb-2">
+              إدارة المنتجات
+              <div className="h-1 w-12 bg-emerald-500 mt-1 rounded-full"></div>
+            </h2>
+            <p className="text-white/80 font-tajawal drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">إدارة وتتبع جميع منتجات القهوة والمخزون</p>
+          </div>
+        </div>
       </div>
 
-      <div className="mb-6 flex flex-col md:flex-row gap-4">
+      {/* Search and Filters Section - Glass Card */}
+      <div className="bg-black/40 backdrop-blur-sm rounded-xl border border-white/10 text-white p-6 shadow-lg mb-6">
         <div className="flex-1 relative">
           <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-200/50 w-5 h-5" />
           <input
@@ -119,7 +127,6 @@ export default function Inventory() {
             className="w-full bg-black/30 backdrop-blur-sm rounded-2xl pr-12 pl-4 py-3 font-tajawal text-slate-100 placeholder-slate-200/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 border border-white/20"
           />
         </div>
-
         <div className="flex gap-2">
           <select
             value={filterType}
@@ -141,7 +148,8 @@ export default function Inventory() {
         </div>
       </div>
 
-      <div className="glass rounded-3xl p-6 overflow-x-auto">
+      {/* Products Table Section - Glass Card */}
+      <div className="bg-black/40 backdrop-blur-sm rounded-xl border border-white/10 text-white p-6 shadow-lg overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="border-b border-gold/20">
