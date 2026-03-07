@@ -428,7 +428,7 @@ export default function AddProductModal({ isOpen, onClose, onProductAdded }: Add
                   name="barcode"
                   value={formData.barcode}
                   onChange={handleInputChange}
-                  className="w-full neumorphic rounded-xl px-4 py-3 font-tajawal text-espresso-brown placeholder-espresso-brown/50 focus:outline-none focus:ring-2 focus:ring-gold smooth-transition"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                   placeholder="أدخل الباركود"
                   disabled={loading}
                 />

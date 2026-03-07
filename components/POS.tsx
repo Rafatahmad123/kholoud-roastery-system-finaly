@@ -125,10 +125,13 @@ export default function POS() {
       )
       scannerRef.current.render(
         async (decodedText) => {
-          console.log('📷 Barcode scanned:', decodedText)
+          console.log('📷 Scanned:', decodedText)
           
-          // Search for exact barcode match in products array
-          const matchedProduct = products.find(product => product.barcode === decodedText)
+          // Search for exact barcode match in products array with data sanitization
+          const matchedProduct = products.find(p => String(p.barcode).trim() === String(decodedText).trim())
+          
+          console.log('🔍 Looking for barcode:', String(decodedText).trim())
+          console.log('🔍 Available products barcodes:', products.map(p => String(p.barcode).trim()))
           
           if (matchedProduct) {
             console.log('✅ Product found:', matchedProduct.name)

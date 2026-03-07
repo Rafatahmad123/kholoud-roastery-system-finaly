@@ -104,16 +104,19 @@ export default function ExpensesPage() {
   }
 
   const getTotalExpenses = () => {
-    return expenses.reduce((total, expense) => total + expense.amount, 0)
+    const expensesArray = Array.isArray(expenses) ? expenses : (expenses?.data || [])
+    return expensesArray.reduce((total, expense) => total + expense.amount, 0)
   }
 
   const getTotalByCategory = (category: string) => {
-    return expenses
+    const expensesArray = Array.isArray(expenses) ? expenses : (expenses?.data || [])
+    return expensesArray
       .filter(expense => expense.category === category)
       .reduce((total, expense) => total + expense.amount, 0)
   }
 
-  const filteredExpenses = (expenses || []).filter(expense => {
+  const expensesArray = Array.isArray(expenses) ? expenses : (expenses?.data || []);
+  const filteredExpenses = expensesArray.filter(expense => {
     const matchesSearch = expense.description.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesCategory = categoryFilter === 'all' || expense.category === categoryFilter
     return matchesSearch && matchesCategory
@@ -131,7 +134,8 @@ export default function ExpensesPage() {
   }
 
   return (
-    <div className="bg-black/30 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl p-6">
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="bg-black/30 backdrop-blur-md rounded-2xl border border-white/10 p-6 shadow-xl">
       {/* Header Section with Glass Card */}
       <div className="bg-black/30 backdrop-blur-md rounded-2xl border border-white/10 shadow-xl p-6 mb-8 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-3xl rounded-full -mr-16 -mt-16"></div>
@@ -372,6 +376,7 @@ export default function ExpensesPage() {
           </div>
         </div>
       )}
+    </div>
     </div>
   )
 }

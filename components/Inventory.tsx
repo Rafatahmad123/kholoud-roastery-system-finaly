@@ -100,7 +100,8 @@ export default function Inventory() {
   }
 
   return (
-    <div className="bg-black/30 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl p-6">
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="bg-black/30 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl p-6">
       {/* Header Section with Glass Card */}
       <div className="bg-black/30 backdrop-blur-md rounded-2xl border border-white/10 shadow-xl p-6 mb-8 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-3xl rounded-full -mr-16 -mt-16"></div>
@@ -117,21 +118,22 @@ export default function Inventory() {
 
       {/* Search and Filters Section - Glass Card */}
       <div className="bg-black/40 backdrop-blur-md rounded-2xl border border-white/10 shadow-xl p-6 mb-6">
-        <div className="flex-1 relative">
-          <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-200/50 w-5 h-5" />
-          <input
-            type="text"
-            placeholder="البحث عن منتج..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-black/30 backdrop-blur-sm rounded-2xl pr-12 pl-4 py-3 font-tajawal text-slate-100 placeholder-slate-200/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 border border-white/20"
-          />
-        </div>
+        <div className="flex gap-4 w-full">
+          <div className="relative flex-1">
+            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="البحث عن المنتج أو النوع..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl px-4 py-2 w-full focus:ring-2 focus:ring-emerald-500/50 outline-none text-white placeholder:text-gray-500 pr-10"
+            />
+          </div>
         <div className="flex gap-2">
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            className="bg-black/30 backdrop-blur-sm rounded-2xl px-4 py-3 font-tajawal text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 border border-white/20"
+            className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
           >
             {uniqueTypes.map(type => (
               <option key={type} value={type}>{type}</option>
@@ -140,7 +142,7 @@ export default function Inventory() {
 
           <button
             onClick={() => setShowAddModal(true)}
-            className="bg-black/30 backdrop-blur-sm rounded-2xl px-6 py-3 font-tajawal text-slate-200 hover:bg-emerald-600 hover:text-white transition-all duration-200 flex items-center gap-2 border border-white/20"
+            className="bg-emerald-600/80 hover:bg-emerald-500 backdrop-blur-md text-white rounded-xl px-6 py-3 font-tajawal font-semibold flex items-center gap-2 transition-all duration-200"
           >
             <Plus className="w-5 h-5" />
             إضافة منتج
@@ -171,7 +173,7 @@ export default function Inventory() {
                   <div className="flex items-center gap-3">
                     <Coffee className="w-6 h-6 text-emerald-300" />
                     <div className="flex flex-col">
-                      <span className="font-tajawal text-slate-100">{product.name}</span>
+                      <span className="font-tajawal text-white">{product.name}</span>
                       {isExpiringSoon(product.expiry_date) && (
                         <div className="flex items-center gap-1 text-orange-400">
                           <AlertTriangle className="w-4 h-4" />
@@ -181,10 +183,10 @@ export default function Inventory() {
                     </div>
                   </div>
                 </td>
-                <td className="py-4 font-tajawal text-slate-100">
+                <td className="py-4 font-tajawal text-white">
                   {formatDate(product.expiry_date)}
                 </td>
-                <td className="py-4 font-tajawal text-slate-100 font-semibold">
+                <td className="py-4 font-tajawal text-white font-semibold">
                   {formatDualCurrency(product.wholesale_price_usd || product.price / 1.20, exchangeRate, false)}
                 </td>
                 <td className="py-4 font-tajawal text-amber-200 font-bold">
@@ -255,10 +257,10 @@ export default function Inventory() {
             </div>
             
             <div className="bg-black/20 backdrop-blur-sm rounded-lg p-3 mb-4 border border-white/10">
-              <p className="font-tajawal text-slate-100 font-medium">
+              <p className="font-tajawal text-white font-medium">
                 {deleteConfirm.name}
               </p>
-              <p className="text-sm font-tajawal text-slate-200">
+              <p className="text-sm font-tajawal text-white">
                 {deleteConfirm.barcode}
               </p>
             </div>
@@ -266,7 +268,7 @@ export default function Inventory() {
             <div className="flex gap-3">
               <button
                 onClick={() => setDeleteConfirm(null)}
-                className="flex-1 px-4 py-2 border border-white/20 text-slate-200 rounded-lg hover:bg-white/10 transition-all duration-200 font-tajawal font-medium bg-black/30 backdrop-blur-sm"
+                className="flex-1 px-4 py-2 border border-white/20 text-white rounded-lg hover:bg-white/10 transition-all duration-200 font-tajawal font-medium bg-black/30 backdrop-blur-sm"
               >
                 إلغاء
               </button>
@@ -280,6 +282,7 @@ export default function Inventory() {
           </div>
         </div>
       )}
+    </div>
     </div>
   )
 }
