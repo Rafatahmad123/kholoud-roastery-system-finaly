@@ -20,6 +20,17 @@ export default function Inventory() {
   const [deleteConfirm, setDeleteConfirm] = useState<Product | null>(null)
   const { exchangeRate } = useExchangeRate()
 
+  const loadProducts = async () => {
+    try {
+      const data = await fetchProducts()
+      setProducts(data)
+    } catch (error) {
+      console.error('Error loading products:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     loadProducts()
   }, [])
@@ -38,17 +49,6 @@ export default function Inventory() {
       }
     }
   }, [])
-
-  const loadProducts = async () => {
-    try {
-      const data = await fetchProducts()
-      setProducts(data)
-    } catch (error) {
-      console.error('Error loading products:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const handleEditProduct = (product: Product) => {
     setSelectedProduct(product)
@@ -102,9 +102,9 @@ export default function Inventory() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="bg-black/30 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl p-6">
-      {/* Header Section with Glass Card */}
-      <div className="bg-black/30 backdrop-blur-md rounded-2xl border border-white/10 shadow-xl p-6 mb-8 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-3xl rounded-full -mr-16 -mt-16"></div>
+        {/* Header Section with Glass Card */}
+        <div className="bg-black/30 backdrop-blur-md rounded-2xl border border-white/10 shadow-xl p-6 mb-8 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-3xl rounded-full -mr-16 -mt-16"></div>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
           <div>
             <h2 className="text-3xl font-bold font-tajawal text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] mb-2">
