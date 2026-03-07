@@ -27,9 +27,9 @@ export default function RootLayout({
         <div className="relative z-0 flex min-h-screen flex-col">
           <ToastProvider>
             <ExchangeRateProvider>
-              <div className="px-6 py-10 max-w-6xl mx-auto">
+              <main className="container mx-auto px-4 md:px-8 py-24 min-h-screen">
                 {children}
-              </div>
+              </main>
             </ExchangeRateProvider>
           </ToastProvider>
         </div>

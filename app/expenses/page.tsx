@@ -40,6 +40,7 @@ export default function ExpensesPage() {
         throw new Error('Failed to fetch expenses')
       }
       const data = await response.json()
+      if (!data) return null
       setExpenses(data)
     } catch (error) {
       console.error('❌ Error loading expenses:', error)
@@ -130,7 +131,7 @@ export default function ExpensesPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 pt-24 pb-20 min-h-screen">
+    <div className="bg-black/30 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl p-6">
       {/* Header Section with Glass Card */}
       <div className="bg-black/30 backdrop-blur-md rounded-2xl border border-white/10 shadow-xl p-6 mb-8 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-3xl rounded-full -mr-16 -mt-16"></div>
