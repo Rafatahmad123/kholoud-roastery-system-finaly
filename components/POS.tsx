@@ -69,39 +69,6 @@ export default function POS() {
     product.name.includes(searchTerm) || product.type.includes(searchTerm)
   )
 
-  useEffect(() => {
-    if (showScanner && !scannerRef.current) {
-      scannerRef.current = new Html5QrcodeScanner(
-        'qr-reader',
-        { fps: 10, qrbox: { width: 250, height: 250 } },
-        false
-      )
-      scannerRef.current.render(
-        async (decodedText) => {
-          try {
-            const product = await fetchProductByBarcode(decodedText)
-            if (product) {
-              addToCart(product)
-            }
-          } catch (error) {
-            console.error('Error fetching product by barcode:', error)
-          }
-          setShowScanner(false)
-        },
-        (error) => {
-          console.warn(error)
-        }
-      )
-    }
-
-    return () => {
-      if (scannerRef.current) {
-        scannerRef.current.clear()
-        scannerRef.current = null
-      }
-    }
-  }, [showScanner])
-
   const addToCart = (product: Product) => {
     console.log('🛒 POS: Adding product to cart:', product)
     console.log('🔍 Product ID type:', typeof product.id)
@@ -144,6 +111,60 @@ export default function POS() {
       return prevCart
     })
   }
+
+  useEffect(() => {
+    if (showScanner && !scannerRef.current) {
+      scannerRef.current = new Html5QrcodeScanner(
+        'qr-reader',
+        { 
+          fps: 10, 
+          qrbox: { width: 250, height: 250 },
+          supportedScanTypes: [0] // 0 = QR_CODE, 1 = BARCODE
+        },
+        false
+      )
+      scannerRef.current.render(
+        async (decodedText) => {
+          console.log('📷 Barcode scanned:', decodedText)
+          
+          // Search for exact barcode match in products array
+          const matchedProduct = products.find(product => product.barcode === decodedText)
+          
+          if (matchedProduct) {
+            console.log('✅ Product found:', matchedProduct.name)
+            
+            // Success feedback - vibration only
+            if (typeof window !== 'undefined' && 'vibrate' in navigator) {
+              navigator.vibrate(200) // Vibration feedback
+            }
+            
+            // Add to cart immediately
+            addToCart(matchedProduct)
+            
+            // Close camera immediately to keep UI clean
+            setShowScanner(false)
+          } else {
+            console.log('❌ No product found for barcode:', decodedText)
+            // Optional: Show error feedback
+            if (typeof window !== 'undefined' && 'vibrate' in navigator) {
+              navigator.vibrate([100, 50, 100]) // Error vibration pattern
+            }
+          }
+        },
+        (error) => {
+          console.warn('Scanner error:', error)
+        }
+      )
+    }
+
+    return () => {
+      if (scannerRef.current) {
+        scannerRef.current.clear()
+        scannerRef.current = null
+      }
+    }
+  }, [showScanner, products, addToCart])
+
 
   const updateQuantity = (id: number, change: number) => {
     console.log('🔄 POS: Updating quantity for item ID:', id, 'Change:', change)
@@ -355,28 +376,21 @@ export default function POS() {
           <div className="bg-black/40 backdrop-blur-md rounded-2xl border border-white/10 shadow-xl p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-bold font-tajawal text-white">المنتجات</h3>
-              <div className="flex gap-2">
-                <div className="relative">
+              <div className="flex gap-2 w-full">
+                <div className="relative flex-1">
                   <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-200/50 w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="البحث..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="bg-black/30 backdrop-blur-sm rounded-xl pr-10 pl-4 py-2 font-tajawal text-slate-100 placeholder-slate-200/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 border border-white/20"
-                />
                   <input
                     type="text"
-                    placeholder="البحث..."
+                    placeholder="البحث عن المنتج أو النوع..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="bg-black/30 backdrop-blur-sm rounded-xl pr-10 pl-4 py-2 font-tajawal text-slate-100 placeholder-slate-200/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 border border-white/20"
+                    className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl px-4 py-2 w-full focus:ring-2 focus:ring-emerald-500/50 outline-none text-white placeholder-slate-200/50 pr-10"
                   />
                 </div>
                 <button
                   onClick={() => setShowScanner(!showScanner)}
-                  className="bg-black/30 backdrop-blur-sm rounded-xl p-2 hover:bg-emerald-600 hover:text-white transition-all duration-200 border border-white/20"
-                  style={{ cursor: 'pointer' }}
+                  className="bg-emerald-600/80 hover:bg-emerald-500 backdrop-blur-sm rounded-xl p-2 hover:text-white transition-all duration-200 border border-white/20 text-white"
+                  title="مسح الباركود"
                 >
                   <Camera className="w-5 h-5" />
                 </button>
@@ -384,20 +398,25 @@ export default function POS() {
             </div>
 
             {showScanner && (
-              <div
-                className="mb-4 neumorphic rounded-2xl p-4"
-                style={{ opacity: 1, height: 'auto' }}
-              >
+              <div className="mb-4 bg-black/30 backdrop-blur-md rounded-2xl border border-white/10 p-4 shadow-xl">
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-tajawal text-white">المسح الضوئي</h4>
+                  <h4 className="font-tajawal text-white flex items-center gap-2">
+                    <Camera className="w-4 h-4 text-emerald-400" />
+                    المسح الضوئي للمنتجات
+                  </h4>
                   <button
                     onClick={() => setShowScanner(false)}
-                    className="p-1 hover:bg-red-600 hover:text-white rounded-lg transition-all duration-200"
+                    className="p-1 hover:bg-red-600/80 hover:text-white rounded-lg transition-all duration-200 text-white/80"
                   >
                     <X className="w-4 h-4" />
                   </button>
                 </div>
-                <div id="qr-reader"></div>
+                <div className="bg-black/20 rounded-xl p-2">
+                  <div id="qr-reader" className="rounded-xl overflow-hidden" />
+                </div>
+                <p className="text-xs text-gray-400 mt-2 text-center">
+                  وجه الكاميرا إلى الباركود لإضافة المنتج تلقائياً
+                </p>
               </div>
             )}
 
