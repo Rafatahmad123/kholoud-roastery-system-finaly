@@ -91,16 +91,15 @@ export default function Inventory() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 pt-24 pb-20">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="w-12 h-12 border-4 border-gold border-t-transparent rounded-full animate-spin"></div>
-        </div>
+      <div className="flex justify-center items-center h-64 text-white">
+        جاري التحميل...
       </div>
-    )
-  }
+    );
+  } // يجب أن يكون هناك قوس واحد فقط هنا لإغلاق كتلة الـ if
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
+      {/* باقي الكود */}
       <div className="bg-black/30 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl p-6">
         {/* Header Section with Glass Card */}
         <div className="bg-black/30 backdrop-blur-md rounded-2xl border border-white/10 shadow-xl p-6 mb-8 relative overflow-hidden">
@@ -129,24 +128,25 @@ export default function Inventory() {
               className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl px-4 py-2 w-full focus:ring-2 focus:ring-emerald-500/50 outline-none text-white placeholder:text-gray-500 pr-10"
             />
           </div>
-        <div className="flex gap-2">
-          <select
-            value={filterType}
-            onChange={(e) => setFilterType(e.target.value)}
-            className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
-          >
-            {uniqueTypes.map(type => (
-              <option key={type} value={type}>{type}</option>
-            ))}
-          </select>
+          <div className="flex gap-2">
+            <select
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value)}
+              className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+            >
+              {uniqueTypes.map(type => (
+                <option key={type} value={type}>{type}</option>
+              ))}
+            </select>
 
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="bg-emerald-600/80 hover:bg-emerald-500 backdrop-blur-md text-white rounded-xl px-6 py-3 font-tajawal font-semibold flex items-center gap-2 transition-all duration-200"
-          >
-            <Plus className="w-5 h-5" />
-            إضافة منتج
-          </button>
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="bg-emerald-600/80 hover:bg-emerald-500 backdrop-blur-md text-white rounded-xl px-6 py-3 font-tajawal font-semibold flex items-center gap-2 transition-all duration-200"
+            >
+              <Plus className="w-5 h-5" />
+              إضافة منتج
+            </button>
+          </div>
         </div>
       </div>
 
